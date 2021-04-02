@@ -130,7 +130,7 @@ class SearchCandidate extends React.Component {
       let str = window.location.href.replace('3000/search', '3001/api/search/result');
       Axios.get(str).then((res) => {
         let temp = res.data.map((el) => {
-          return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed.split('T')[0]]
+          return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed.split('T')[0],el.cand_reg_no]
         })
         this.setState({
           srchr: temp
@@ -141,7 +141,7 @@ class SearchCandidate extends React.Component {
       let str = window.location.href.replace('3000/search', '3001/api/search/result');
       Axios.get(str).then((res) => {
         let temp = res.data.map((el) => {
-          return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed.split('T')[0]]
+          return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed.split('T')[0],el.cand_reg_no]
         })
         this.setState({
           srchr: temp
@@ -167,6 +167,7 @@ class SearchCandidate extends React.Component {
             <table className="table thead-dark table-striped table-hover table-bordered m-3">
               <thead className="thead-dark">
                 <tr>
+                 <th scope="col" >Reg No </th>
                 <th scope="col" >Full Name</th>
                 <th scope="col">Knowledge Area</th>
                 <th scope="col">Level</th>
@@ -180,6 +181,7 @@ class SearchCandidate extends React.Component {
   
                 {this.state.srchr.map((el) => {
                   return (<tr>
+                  <td>{el[8]}</td>
                   <td>{el[0]} {el[1]}</td>
                   <td>{el[2]}</td>
                   <td>{el[3]}</td>

@@ -47,7 +47,7 @@ class Results1 extends React.Component {
 
     Axios.get('http://localhost:3001/api/results').then((res) => {
       let temp = res.data.map((el) => {
-        return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed]
+        return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed,el.cand_reg_no]
       })
       this.setState({
         results: temp
@@ -60,7 +60,7 @@ class Results1 extends React.Component {
   filterBut() {
     Axios.post('http://localhost:3001/api/results/filter',{date:this.state.filterDate}).then((res) => {
       let temp = res.data.map((el) => {
-        return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed.split('T')[0]]
+        return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed.split('T')[0],el.cand_reg_no]
       })
       this.setState({
         results: temp
@@ -71,7 +71,7 @@ class Results1 extends React.Component {
   resetFilter() {
     Axios.get('http://localhost:3001/api/results').then((res) => {
       let temp = res.data.map((el) => {
-        return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed]
+        return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed,el.cand_reg_no]
       })
       this.setState({
         results: temp
@@ -121,6 +121,7 @@ class Results1 extends React.Component {
         <table className="table thead-dark table-striped table-hover table-bordered m-3">
           <thead className="thead-dark">
             <tr>
+              <th scope="col" >Reg No </th>
               <th scope="col" >Full Name</th>
               <th scope="col">Knowledge Area</th>
               <th scope="col">Level</th>
@@ -135,6 +136,7 @@ class Results1 extends React.Component {
 
             {this.state.results.map((el) => {
               return (<tr>
+                <td>{el[8]}</td>
                 <td>{el[0]} {el[1]}</td>
                 <td>{el[2]}</td>
                 <td>{el[3]}</td>
