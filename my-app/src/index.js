@@ -1,10 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css';
-import Button from 'react-bootstrap/Button';
 import {
-  Navbar, Nav, NavItem, NavDropdown, MenuItem, Form, FormControl, Col, Row, ToggleButtonGroup
-  , ToggleButton, Tabs, Tab
+  Navbar, Nav,  Form, FormControl, Tabs, Tab
 } from 'react-bootstrap';
 import './index.css';
 import Axios from 'axios';
@@ -12,11 +10,9 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   NavLink
 } from "react-router-dom";
-import { FormGroup } from 'react-bootstrap';
-import { faHome , faCode , faEdit, faTrash} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import jaj from './pages/va.js';
 import AddResult from './pages/addResult.js';
@@ -121,7 +117,7 @@ class Home1 extends React.Component {
       })
     })
   };
-  
+
   
   deleteUser(e){
     let k = e.target.getAttribute("data-remove");
@@ -134,6 +130,7 @@ class Home1 extends React.Component {
   }
   render() {
     return (<div>
+    
     <h5 className="pt-3 pl-5">Candidates Count: {this.state.candidates.length}</h5>
       <div className="table-responsive mt-3" data-spy="scroll">
         <table className="table thead-dark table-hover table-striped table-bordered m-3 ">
@@ -151,7 +148,7 @@ class Home1 extends React.Component {
           <tbody>
 
             {this.state.candidates.map((el) => {
-              return (<tr>
+              return (<tr key={el[0]}>
                 <td>{el[0]}</td>
                 <td>{el[1]}</td>
                 <td>{el[2]}</td>
@@ -160,11 +157,11 @@ class Home1 extends React.Component {
                 <td><img className="img-fluid"
                   src={`${process.env.PUBLIC_URL}/profilepics/${el[5]}`}
                   alt="logo" /></td>
-                <td><button type="submit" className="btn btn-danger btn-sm" data-remove={el[0]} type="submit"
-                  onClick={this.deleteUser.bind(this)} data-toggle="tooltip" data-placement="right" title="Delete User">Del</button>
+                <td><button type="submit" className="btn btn-outline-danger btn-sm" data-remove={el[0]} type="submit"
+                  onClick={this.deleteUser.bind(this)} data-toggle="tooltip" data-placement="right" title="Delete User"><FontAwesomeIcon icon={faTrash} style={{ color: 'red' }} size="md"/></button>
   
-                    <NavLink activeClassName="active" to={`/editCandidate/${el[0]}`} 
-                     data-toggle="tooltip" data-placement="right" title="Edit User"><FontAwesomeIcon icon={faEdit} style={{ color: 'green' }} size="lg"/></NavLink>
+                    <NavLink activeClassName="active" to={`/editCandidate/${el[0]}`} className="btn btn-outline-success btn-sm"
+                     data-toggle="tooltip" data-placement="right" title="Edit User"><FontAwesomeIcon icon={faEdit} style={{ color: 'green' }} size="md"/></NavLink>
                     </td>
               </tr>)
             })}

@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Button from 'react-bootstrap/Button';
 import {
   Navbar, Nav, NavItem, NavDropdown, MenuItem, Form, FormControl, Col, Row, ToggleButtonGroup
-  , ToggleButton, Alert
+  , ToggleButton, Alert,Collapse
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Axios from 'axios';
@@ -29,7 +29,11 @@ class UpdateCandidate extends React.Component {
         selectedFile: null,
         errorText:'',
         emailError:'',
-        profilepicName:''
+        profilepicName:'',
+        editFirstName:false,
+        editLastName:false,
+        editEmail:false,
+        editIndustry:false
   
       }
     };
@@ -82,6 +86,28 @@ class UpdateCandidate extends React.Component {
   
   
     }
+    toggleEdit(e){
+      let chk = e.target.getAttribute('data-edit');
+
+      if(chk=='firstname'){
+        this.setState({
+        editFirstName:!this.state.editFirstName
+      })
+      }else if(chk=='lastname'){
+        this.setState({
+          editLastName:!this.state.editLastName
+        })
+      }else if (chk=="email"){
+        this.setState({
+          editEmail:!this.state.editEmail
+        })
+      }else if(chk=="industry"){
+        this.setState({
+          editIndustry:!this.state.editIndustry
+        })
+      }
+      
+    }
     submitData() {
       const data = new FormData();
       console.log(data);
@@ -128,18 +154,60 @@ class UpdateCandidate extends React.Component {
 
               <Form.Group controlId="formBasicFirstName" as={Col} md="4">
                 <Form.Label className="font-weight-bold">First Name : {this.state.firstname}</Form.Label>
-                <Form.Control type="text" placeholder="Enter First Name" onChange={this.addFisrtName.bind(this)} 
+                 <Button
+        onClick={this.toggleEdit.bind(this)}
+        aria-controls="example-collapse-text"
+        aria-expanded={true}
+        data-edit='firstname'
+        className="btn btn-sm btn-outline-secondary"
+        bsPrefix="btn-sm ml-3"
+      >
+        Edit
+      </Button>
+
+                      <Collapse in={this.state.editFirstName}>
+      <Form.Control type="text" placeholder="Enter First Name" onChange={this.addFisrtName.bind(this)} 
                 />
+      </Collapse>
+                
               </Form.Group>
   
               <Form.Group controlId="formBasicLastName" as={Col} md="4">
                 <Form.Label className="font-weight-bold">Last Name : {this.state.lastname}</Form.Label>
-                <Form.Control type="text" placeholder="Enter Last Name" onChange={this.addLastName.bind(this)} />
+
+                         <Button
+        onClick={this.toggleEdit.bind(this)}
+        aria-controls="example-collapse-text"
+        aria-expanded={true}
+        data-edit='lastname'
+        className="btn btn-sm btn-outline-secondary"
+        bsPrefix="btn-sm ml-3"
+      >
+        Edit
+      </Button>
+
+                      <Collapse in={this.state.editLastName}>
+     <Form.Control type="text" placeholder="Enter Last Name" onChange={this.addLastName.bind(this)} />
+      </Collapse>
+
+                
               </Form.Group>
   
               <Form.Group controlId="formBasicEmail" as={Col} md="4">
                 <Form.Label className="font-weight-bold">Email address : {this.state.email}</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" onChange={this.addEmail.bind(this)} />
+                <Button
+        onClick={this.toggleEdit.bind(this)}
+        aria-controls="example-collapse-text"
+        aria-expanded={true}
+        data-edit='email'
+        className="btn btn-sm btn-outline-secondary"
+        bsPrefix="btn-sm ml-3"
+      >
+        Edit
+      </Button>
+       <Collapse in={this.state.editEmail}>
+     <Form.Control type="email" placeholder="Enter email" onChange={this.addEmail.bind(this)} />
+      </Collapse>         
                 <Form.Text className="text-muted">
                   We'll never share your email with anyone else.
       </Form.Text>
@@ -150,7 +218,22 @@ class UpdateCandidate extends React.Component {
   
               <Form.Group controlId="formBasicIndustry" as={Col} md="4">
                 <Form.Label className="font-weight-bold">Industry : {this.state.industry}</Form.Label>
+
+                <Button
+        onClick={this.toggleEdit.bind(this)}
+        aria-controls="example-collapse-text"
+        aria-expanded={true}
+        data-edit='industry'
+        className="btn btn-sm btn-outline-secondary"
+        bsPrefix="btn-sm ml-3"
+      >
+        Edit
+      </Button>
+ <Collapse in={this.state.editIndustry}>
+     
                 <Form.Control type="text" placeholder="Enter Industry" onChange={this.addIndustry.bind(this)} />
+      </Collapse> 
+
               </Form.Group>
   
               <Form.Group as={Col} md="4">

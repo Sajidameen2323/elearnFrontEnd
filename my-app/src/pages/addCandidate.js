@@ -77,7 +77,7 @@ class Insert extends React.Component {
       console.log(data);
       const regEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       let chkEmail = regEmail.test(this.state.email);
-      const regName = /^[a-zA-Z]+$/;
+      const regName = /^[a-zA-Z\s]+$/;
       let chkFirstName = regName.test(this.state.firstname);
       let chkLastName = regName.test(this.state.lastname);
       if (this.state.firstname !== '' && this.state.lastname !== ''
@@ -100,7 +100,8 @@ class Insert extends React.Component {
         this.setState({
           errorText:'',
           emailError:''
-        })
+        });
+        window.location.reload();
       } else if(!chkEmail){
         this.setState({
           emailError:'Enter A Valid Email'
@@ -171,7 +172,7 @@ class Insert extends React.Component {
               <Button variant="outline-dark"  className="ml-3" onClick={this.submitData.bind(this)}>
                 Submit
     </Button>
-  
+
             </Form>
           </div>
         </div>
