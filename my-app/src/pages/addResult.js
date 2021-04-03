@@ -157,7 +157,6 @@ class AddResult extends React.Component {
     </Button>
         </Form>
         
-        <h5>{this.state.assessor}</h5>
       </div>
     )
   }

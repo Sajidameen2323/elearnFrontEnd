@@ -16,11 +16,14 @@ import {
   NavLink
 } from "react-router-dom";
 import { FormGroup } from 'react-bootstrap';
+import { faHome , faCode , faEdit, faTrash} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import jaj from './pages/va.js';
 import AddResult from './pages/addResult.js';
 import Insert from './pages/addCandidate.js';
 import Search from './pages/search.js';
 import Results from './pages/results.js';
+import UpdateCandidate from './pages/editCandidate.js';
 
 
 Axios.get("http://localhost:3001/api/select").then((response) => {
@@ -53,7 +56,7 @@ class App extends React.Component {
       <div>
         <Router>
           <Navbar bg="dark" variant="dark" className="justify-content-between" fixed="top">
-            <Navbar.Brand href="/jaj">ELMS</Navbar.Brand>
+            <Navbar.Brand href="/jaj">ELMS </Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="/">Candidates</Nav.Link>
               <Nav.Link href="/results">Results</Nav.Link>
@@ -75,6 +78,7 @@ class App extends React.Component {
             <Route path="/results" component={Results}></Route>
             <Route path="/addResults" component={AddResult}></Route>
             <Route path="/jaj" component={jaj}></Route>
+            <Route path="/editCandidate/:regNo" component={UpdateCandidate}></Route>
             <Route path="/">
               <Home />
             </Route>
@@ -117,16 +121,8 @@ class Home1 extends React.Component {
       })
     })
   };
-  componentDidUpdate(){
-    Axios.get("http://localhost:3001/api/select").then((response) => {
-      let arr = response.data.map((el) => {
-        return [el.registration_no, el.firstname, el.lastname, el.email, el.industry, el.profilepic]
-      })
-      this.setState({
-        candidates: [...arr]
-      })
-    })
-  }
+  
+  
   deleteUser(e){
     let k = e.target.getAttribute("data-remove");
     Axios.delete(`http://localhost:3001/api/userDelete?id=${k}`).then((res)=>{
@@ -134,6 +130,7 @@ class Home1 extends React.Component {
     }).catch((err)=>{
       console.log(err)
     });
+    window.location.reload();
   }
   render() {
     return (<div>
@@ -163,10 +160,12 @@ class Home1 extends React.Component {
                 <td><img className="img-fluid"
                   src={`${process.env.PUBLIC_URL}/profilepics/${el[5]}`}
                   alt="logo" /></td>
-                <td><button className="btn btn-danger btn-sm" data-remove={el[0]} type="submit"
+                <td><button type="submit" className="btn btn-danger btn-sm" data-remove={el[0]} type="submit"
                   onClick={this.deleteUser.bind(this)} data-toggle="tooltip" data-placement="right" title="Delete User">Del</button>
-                  <button className="btn btn-secondary btn-sm mt-2" data-toggle="tooltip" data-placement="right" title="Edit User">
-                    Edit</button></td>
+  
+                    <NavLink activeClassName="active" to={`/editCandidate/${el[0]}`} 
+                     data-toggle="tooltip" data-placement="right" title="Edit User"><FontAwesomeIcon icon={faEdit} style={{ color: 'green' }} size="lg"/></NavLink>
+                    </td>
               </tr>)
             })}
 

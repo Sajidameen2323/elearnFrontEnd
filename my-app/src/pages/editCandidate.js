@@ -6,6 +6,7 @@ import {
   Navbar, Nav, NavItem, NavDropdown, MenuItem, Form, FormControl, Col, Row, ToggleButtonGroup
   , ToggleButton, Alert
 } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Axios from 'axios';
 import {
   BrowserRouter as Router,
@@ -15,11 +16,12 @@ import {
   NavLink
 } from "react-router-dom";
 
-class Insert extends React.Component {
+
+class UpdateCandidate extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        regNo:null,
+        regNo:window.location.pathname.split('/')[2],
         firstname: '',
         lastname: '',
         email: '',
@@ -27,15 +29,23 @@ class Insert extends React.Component {
         selectedFile: null,
         errorText:'',
         emailError:'',
-        nameError:''
+        profilepicName:''
   
       }
     };
-    addRegNumber(e){
-      this.setState({
-        regNo:e.target.value
+    componentDidMount(){
+      Axios.get('http://localhost:3001/api/editCandidate/'+this.state.regNo).then((res)=>{
+        let data = res.data;
+        this.setState({
+          firstname:data[0].firstname,
+          lastname:data[0].lastname,
+          email:data[0].email,
+          industry:data[0].industry,
+          profilepicName:data[0].profilepic
+        })
       })
     }
+
     addFisrtName(e) {
       this.setState({
         firstname: e.target.value
@@ -75,15 +85,10 @@ class Insert extends React.Component {
     submitData() {
       const data = new FormData();
       console.log(data);
-      const regEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      let chkEmail = regEmail.test(this.state.email);
-      const regName = /^[a-zA-Z]+$/;
-      let chkFirstName = regName.test(this.state.firstname);
-      let chkLastName = regName.test(this.state.lastname);
+      const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      let chkEmail = re.test(this.state.email);
       if (this.state.firstname !== '' && this.state.lastname !== ''
-        && this.state.email !== '' && this.state.industry && this.state.selectedFile !== null && chkEmail
-         && chkLastName && chkFirstName
-        && this.state.regNo !== null) {
+        && this.state.email !== '' && this.state.industry && this.state.selectedFile !== null && chkEmail) {
         data.append('file', this.state.selectedFile);
         console.log(data);
         Axios.post('http://localhost:3001/api/insert', {registrationNo:this.state.regNo,
@@ -105,11 +110,7 @@ class Insert extends React.Component {
         this.setState({
           emailError:'Enter A Valid Email'
         })
-      }else if(!chkFirstName || !chkLastName){
-          this.setState({
-            nameError : 'User Name Should Only Contain Letters'
-          })
-      }else {
+      } else {
         this.setState({
           errorText:'Fill All Fields'
         })
@@ -119,34 +120,25 @@ class Insert extends React.Component {
     render() {
       return (
         <div>
-          <div className="container ">
-            <Form className="ml-5 mt-5">
+          <div className="container mt-5">
+          <h5 className="pt-3">Edit Sector for candidate {this.state.regNo}   <FontAwesomeIcon icon="coffee" /></h5>
 
-            <Form.Group controlId="formBasicFirstName" as={Col} md="4">
-                <Form.Label className="font-weight-bold">Registration Number</Form.Label>
-                <Form.Control type="number" placeholder="Enter Registration Number" onChange={this.addRegNumber.bind(this)} 
-                />
-              </Form.Group>
+            <Form className="ml-5 mt-5">
+          
+
               <Form.Group controlId="formBasicFirstName" as={Col} md="4">
-                <Form.Label className="font-weight-bold">First Name</Form.Label>
+                <Form.Label className="font-weight-bold">First Name : {this.state.firstname}</Form.Label>
                 <Form.Control type="text" placeholder="Enter First Name" onChange={this.addFisrtName.bind(this)} 
                 />
-                <Form.Text className="text-danger">
-                  {this.state.nameError}
-      </Form.Text>
               </Form.Group>
   
               <Form.Group controlId="formBasicLastName" as={Col} md="4">
-                <Form.Label className="font-weight-bold">Last Name</Form.Label>
+                <Form.Label className="font-weight-bold">Last Name : {this.state.lastname}</Form.Label>
                 <Form.Control type="text" placeholder="Enter Last Name" onChange={this.addLastName.bind(this)} />
-                <Form.Text className="text-danger">
-                  {this.state.nameError}
-      </Form.Text>
-
               </Form.Group>
   
               <Form.Group controlId="formBasicEmail" as={Col} md="4">
-                <Form.Label className="font-weight-bold">Email address</Form.Label>
+                <Form.Label className="font-weight-bold">Email address : {this.state.email}</Form.Label>
                 <Form.Control type="email" placeholder="Enter email" onChange={this.addEmail.bind(this)} />
                 <Form.Text className="text-muted">
                   We'll never share your email with anyone else.
@@ -157,27 +149,32 @@ class Insert extends React.Component {
               </Form.Group>
   
               <Form.Group controlId="formBasicIndustry" as={Col} md="4">
-                <Form.Label className="font-weight-bold">Industry</Form.Label>
+                <Form.Label className="font-weight-bold">Industry : {this.state.industry}</Form.Label>
                 <Form.Control type="text" placeholder="Enter Industry" onChange={this.addIndustry.bind(this)} />
               </Form.Group>
   
               <Form.Group as={Col} md="4">
-                <Form.File id="exampleFormControlFile1" label="Profile pic" className="font-weight-bold" onChange={this.addFile.bind(this)} />
+              
+                <Form.File id="exampleFormControlFile1" label={`Profile pic : ${this.state.profilepicName}`} className="font-weight-bold" onChange={this.addFile.bind(this)} />
+                <img className="img-fluid mt-2"
+                  src={`${process.env.PUBLIC_URL}/profilepics/${this.state.profilepicName}`}
+                  alt="logo" />
                 <Form.Text className="text-danger">
                   {this.state.errorText}
       </Form.Text>
               </Form.Group>
   
               <Button variant="outline-dark"  className="ml-3" onClick={this.submitData.bind(this)}>
-                Submit
+                Update
     </Button>
   
             </Form>
           </div>
+          <FontAwesomeIcon icon={["fab", "github"]} />
         </div>
   
       )
     }
   };
 
-  export default Insert;
+  export default UpdateCandidate;
