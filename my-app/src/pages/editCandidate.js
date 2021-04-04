@@ -33,7 +33,9 @@ class UpdateCandidate extends React.Component {
         editFirstName:false,
         editLastName:false,
         editEmail:false,
-        editIndustry:false
+        editIndustry:false,
+        firstnameError:'',
+        lastnameError:''
   
       }
     };
@@ -51,20 +53,47 @@ class UpdateCandidate extends React.Component {
     }
 
     addFisrtName(e) {
-      this.setState({
-        firstname: e.target.value
+      let reg = /^[a-z]+$/i;
+      if (reg.test(e.target.value)){
+        this.setState({
+        firstname: e.target.value,
+        firstnameError:''
       })
+      } else{
+        this.setState({
+          firstnameError:'Name Cannot Contain Numbers Or Be Empty'
+        })
+      }
+
     }
-    addLastName(e) {
-      this.setState({
-        lastname: e.target.value
+       addLastName(e) {
+   let reg = /^[a-z]+$/i;
+      if (reg.test(e.target.value)){
+        this.setState({
+        lastname: e.target.value,
+        lastnameError:''
       })
+      } else{
+        this.setState({
+          lastnameError:'Name Cannot Contain Numbers Or Be Empty'
+        })
+      }
     }
-    addEmail(e) {
-      this.setState({
-        email: e.target.value
+   addEmail(e) {
+      let reg = /^[a-z][\w]+[.]{0,1}[\w]+[@][\w]+[.][\w]+/i;
+      if(reg.test(e.target.value)){
+              this.setState({
+        email: e.target.value,
+        emailError:''
       })
+            }else{
+              this.setState({
+                emailError:'Enter A Valid Email'
+              })
+            }
+
     }
+
     addIndustry(e) {
       this.setState({
         industry: e.target.value
@@ -78,7 +107,8 @@ class UpdateCandidate extends React.Component {
       if (types.some((el) => { return el === fileType })) {
         this.setState({
           selectedFile: e.target.files[0],
-          loaded: 0
+          loaded: 0,
+          profilepicName:Date.now().toString().slice(0,9)+'-'+e.target.files[0].name
         })
       } else {
         
@@ -114,12 +144,12 @@ class UpdateCandidate extends React.Component {
       const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       let chkEmail = re.test(this.state.email);
       if (this.state.firstname !== '' && this.state.lastname !== ''
-        && this.state.email !== '' && this.state.industry && this.state.selectedFile !== null && chkEmail) {
+        && this.state.email !== '' && this.state.industry && chkEmail) {
         data.append('file', this.state.selectedFile);
         console.log(data);
-        Axios.post('http://localhost:3001/api/insert', {registrationNo:this.state.regNo,
+        Axios.post('http://localhost:3001/api/updateCandidate', {registrationNo:this.state.regNo,
           firstname: this.state.firstname, lastname: this.state.lastname,
-          email: this.state.email, industry: this.state.industry, profilepic: Date.now().toString().slice(0,9)+'-'+this.state.selectedFile.name
+          email: this.state.email, industry: this.state.industry, profilepic: this.state.profilepicName
         }).then(() => {
           alert('success');
         });
@@ -127,14 +157,10 @@ class UpdateCandidate extends React.Component {
         }).then((res) => {
           console.log(res.statusText)
         });
-        alert ('Successfully Added');
+        alert ('Successfully Updated');
         this.setState({
           errorText:'',
           emailError:''
-        })
-      } else if(!chkEmail){
-        this.setState({
-          emailError:'Enter A Valid Email'
         })
       } else {
         this.setState({
@@ -169,7 +195,9 @@ class UpdateCandidate extends React.Component {
       <Form.Control type="text" placeholder="Enter First Name" onChange={this.addFisrtName.bind(this)} 
                 />
       </Collapse>
-                
+                 <Form.Text className="text-danger">
+                  {this.state.firstnameError}
+      </Form.Text>
               </Form.Group>
   
               <Form.Group controlId="formBasicLastName" as={Col} md="4">
@@ -189,7 +217,9 @@ class UpdateCandidate extends React.Component {
                       <Collapse in={this.state.editLastName}>
      <Form.Control type="text" placeholder="Enter Last Name" onChange={this.addLastName.bind(this)} />
       </Collapse>
-
+<Form.Text className="text-danger">
+                  {this.state.lastnameError}
+      </Form.Text>
                 
               </Form.Group>
   
@@ -207,6 +237,7 @@ class UpdateCandidate extends React.Component {
       </Button>
        <Collapse in={this.state.editEmail}>
      <Form.Control type="email" placeholder="Enter email" onChange={this.addEmail.bind(this)} />
+
       </Collapse>         
                 <Form.Text className="text-muted">
                   We'll never share your email with anyone else.

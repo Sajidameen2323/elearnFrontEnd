@@ -19,7 +19,7 @@ class Insert extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        regNo:null,
+        regNo:'',
         firstname: '',
         lastname: '',
         email: '',
@@ -27,7 +27,8 @@ class Insert extends React.Component {
         selectedFile: null,
         errorText:'',
         emailError:'',
-        nameError:''
+        firstnameError:'',
+        lastnameError:''
   
       }
     };
@@ -37,19 +38,45 @@ class Insert extends React.Component {
       })
     }
     addFisrtName(e) {
-      this.setState({
-        firstname: e.target.value
+      let reg = /^[a-z]+$/i;
+      if (reg.test(e.target.value)){
+        this.setState({
+        firstname: e.target.value,
+        firstnameError:''
       })
+      } else{
+        this.setState({
+          firstnameError:'Name Cannot Contain Numbers Or Be Empty'
+        })
+      }
+
     }
     addLastName(e) {
-      this.setState({
-        lastname: e.target.value
+   let reg = /^[a-z]+$/i;
+      if (reg.test(e.target.value)){
+        this.setState({
+        lastname: e.target.value,
+        lastnameError:''
       })
+      } else{
+        this.setState({
+          lastnameError:'Name Cannot Contain Numbers Or Be Empty'
+        })
+      }
     }
     addEmail(e) {
-      this.setState({
-        email: e.target.value
+      let reg = /^[a-z][\w]+[.]{0,1}[\w]+[@][\w]+[.][\w]+/i;
+      if(reg.test(e.target.value)){
+              this.setState({
+        email: e.target.value,
+        emailError:''
       })
+            }else{
+              this.setState({
+                emailError:'Enter A Valid Email'
+              })
+            }
+
     }
     addIndustry(e) {
       this.setState({
@@ -83,7 +110,7 @@ class Insert extends React.Component {
       if (this.state.firstname !== '' && this.state.lastname !== ''
         && this.state.email !== '' && this.state.industry && this.state.selectedFile !== null && chkEmail
          && chkLastName && chkFirstName
-        && this.state.regNo !== null) {
+        && this.state.regNo !== '') {
         data.append('file', this.state.selectedFile);
         console.log(data);
         Axios.post('http://localhost:3001/api/insert', {registrationNo:this.state.regNo,
@@ -102,15 +129,7 @@ class Insert extends React.Component {
           emailError:''
         });
         window.location.reload();
-      } else if(!chkEmail){
-        this.setState({
-          emailError:'Enter A Valid Email'
-        })
-      }else if(!chkFirstName || !chkLastName){
-          this.setState({
-            nameError : 'User Name Should Only Contain Letters'
-          })
-      }else {
+      } else {
         this.setState({
           errorText:'Fill All Fields'
         })
@@ -133,7 +152,7 @@ class Insert extends React.Component {
                 <Form.Control type="text" placeholder="Enter First Name" onChange={this.addFisrtName.bind(this)} 
                 />
                 <Form.Text className="text-danger">
-                  {this.state.nameError}
+                  {this.state.firstnameError}
       </Form.Text>
               </Form.Group>
   
@@ -141,7 +160,7 @@ class Insert extends React.Component {
                 <Form.Label className="font-weight-bold">Last Name</Form.Label>
                 <Form.Control type="text" placeholder="Enter Last Name" onChange={this.addLastName.bind(this)} />
                 <Form.Text className="text-danger">
-                  {this.state.nameError}
+                  {this.state.lastnameError}
       </Form.Text>
 
               </Form.Group>
