@@ -1,19 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import Button from 'react-bootstrap/Button';
 import {
-  Navbar, Nav, NavItem, NavDropdown, MenuItem, Form, FormControl, Col, Row, ToggleButtonGroup
-  , ToggleButton, Alert
+ Form, Col
 } from 'react-bootstrap';
 import Axios from 'axios';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  NavLink
-} from "react-router-dom";
+
 
 class Insert extends React.Component {
     constructor(props) {
@@ -28,7 +20,8 @@ class Insert extends React.Component {
         errorText:'',
         emailError:'',
         firstnameError:'',
-        lastnameError:''
+        lastnameError:'',
+        imgSrc:null
   
       }
     };
@@ -91,7 +84,8 @@ class Insert extends React.Component {
       if (types.some((el) => { return el === fileType })) {
         this.setState({
           selectedFile: e.target.files[0],
-          loaded: 0
+          loaded: 0,
+          imgSrc: URL.createObjectURL(e.target.files[0])
         })
       } else {
         
@@ -102,7 +96,7 @@ class Insert extends React.Component {
     submitData() {
       const data = new FormData();
       console.log(data);
-      const regEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const regEmail =/^[a-z][\w]+[.]{0,1}[\w]+[@][\w]+[.][\w]+/i;
       let chkEmail = regEmail.test(this.state.email);
       const regName = /^[a-zA-Z\s]+$/;
       let chkFirstName = regName.test(this.state.firstname);
@@ -128,7 +122,6 @@ class Insert extends React.Component {
           errorText:'',
           emailError:''
         });
-        window.location.reload();
       } else {
         this.setState({
           errorText:'Fill All Fields'
@@ -186,7 +179,11 @@ class Insert extends React.Component {
                 <Form.Text className="text-danger">
                   {this.state.errorText}
       </Form.Text>
+        <img className="img-fluid mt-2"
+                  src={this.state.imgSrc}
+                  alt="profilepic" />
               </Form.Group>
+                
   
               <Button variant="outline-dark"  className="ml-3" onClick={this.submitData.bind(this)}>
                 Submit

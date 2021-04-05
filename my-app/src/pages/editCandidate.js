@@ -1,20 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import Button from 'react-bootstrap/Button';
 import {
-  Navbar, Nav, NavItem, NavDropdown, MenuItem, Form, FormControl, Col, Row, ToggleButtonGroup
-  , ToggleButton, Alert,Collapse
+Form,Col,Collapse
 } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Axios from 'axios';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  NavLink
-} from "react-router-dom";
+
 
 
 class UpdateCandidate extends React.Component {
@@ -35,7 +26,8 @@ class UpdateCandidate extends React.Component {
         editEmail:false,
         editIndustry:false,
         firstnameError:'',
-        lastnameError:''
+        lastnameError:'',
+        imgSrc:null
   
       }
     };
@@ -47,9 +39,12 @@ class UpdateCandidate extends React.Component {
           lastname:data[0].lastname,
           email:data[0].email,
           industry:data[0].industry,
-          profilepicName:data[0].profilepic
-        })
-      })
+          profilepicName:data[0].profilepic,
+          imgSrc:`${process.env.PUBLIC_URL}/profilepics/${data[0].profilepic}`
+          
+        });
+      });
+
     }
 
     addFisrtName(e) {
@@ -108,7 +103,8 @@ class UpdateCandidate extends React.Component {
         this.setState({
           selectedFile: e.target.files[0],
           loaded: 0,
-          profilepicName:Date.now().toString().slice(0,9)+'-'+e.target.files[0].name
+          profilepicName:Date.now().toString().slice(0,9)+'-'+e.target.files[0].name,
+          imgSrc: URL.createObjectURL(e.target.files[0])
         })
       } else {
         
@@ -119,19 +115,19 @@ class UpdateCandidate extends React.Component {
     toggleEdit(e){
       let chk = e.target.getAttribute('data-edit');
 
-      if(chk=='firstname'){
+      if(chk==='firstname'){
         this.setState({
         editFirstName:!this.state.editFirstName
       })
-      }else if(chk=='lastname'){
+      }else if(chk==='lastname'){
         this.setState({
           editLastName:!this.state.editLastName
         })
-      }else if (chk=="email"){
+      }else if (chk==="email"){
         this.setState({
           editEmail:!this.state.editEmail
         })
-      }else if(chk=="industry"){
+      }else if(chk==="industry"){
         this.setState({
           editIndustry:!this.state.editIndustry
         })
@@ -141,10 +137,10 @@ class UpdateCandidate extends React.Component {
     submitData() {
       const data = new FormData();
       console.log(data);
-      const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const re = /^[a-z][\w]+[.]{0,1}[\w]+[@][\w]+[.][\w]+/i;
       let chkEmail = re.test(this.state.email);
       if (this.state.firstname !== '' && this.state.lastname !== ''
-        && this.state.email !== '' && this.state.industry && chkEmail) {
+        && this.state.email !== '' && this.state.industry!=='' && chkEmail) {
         data.append('file', this.state.selectedFile);
         console.log(data);
         Axios.post('http://localhost:3001/api/updateCandidate', {registrationNo:this.state.regNo,
@@ -173,7 +169,7 @@ class UpdateCandidate extends React.Component {
       return (
         <div>
           <div className="container mt-5">
-          <h5 className="pt-3">Edit Sector for candidate {this.state.regNo}   <FontAwesomeIcon icon="coffee" /></h5>
+          <h5 className="pt-3">Edit Sector for candidate {this.state.regNo} </h5>
 
             <Form className="ml-5 mt-5">
           
@@ -271,7 +267,7 @@ class UpdateCandidate extends React.Component {
               
                 <Form.File id="exampleFormControlFile1" label={`Profile pic : ${this.state.profilepicName}`} className="font-weight-bold" onChange={this.addFile.bind(this)} />
                 <img className="img-fluid mt-2"
-                  src={`${process.env.PUBLIC_URL}/profilepics/${this.state.profilepicName}`}
+                  src={this.state.imgSrc}
                   alt="logo" />
                 <Form.Text className="text-danger">
                   {this.state.errorText}
@@ -284,7 +280,6 @@ class UpdateCandidate extends React.Component {
   
             </Form>
           </div>
-          <FontAwesomeIcon icon={["fab", "github"]} />
         </div>
   
       )

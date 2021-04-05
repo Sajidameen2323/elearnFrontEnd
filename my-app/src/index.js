@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import {
-  Navbar, Nav,  Form, FormControl, Tabs, Tab
+  Navbar, Nav,  Form, FormControl, Tabs, Tab, Modal,Button
 } from 'react-bootstrap';
 import './index.css';
 import Axios from 'axios';
@@ -14,7 +14,6 @@ import {
 } from "react-router-dom";
 import { faEdit, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import jaj from './pages/va.js';
 import AddResult from './pages/addResult.js';
 import Insert from './pages/addCandidate.js';
 import Search from './pages/search.js';
@@ -42,7 +41,8 @@ class App extends React.Component {
     this.setState({
       searchCQ: `/search/${e.target.value}`,
       searchRQ:`/search/result/${e.target.value}`
-    })
+    });
+  
   }
 
 
@@ -52,14 +52,14 @@ class App extends React.Component {
       <div>
         <Router>
           <Navbar bg="dark" variant="dark" className="justify-content-between" fixed="top">
-            <Navbar.Brand href="/jaj">ELMS </Navbar.Brand>
+            <Navbar.Brand href="#">ELMS </Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="/">Candidates</Nav.Link>
               <Nav.Link href="/results">Results</Nav.Link>
             </Nav>
             <Form inline>
               <FormControl type="text" placeholder="First or Last Name or Id" className="mr-sm-2 form-control-sm" onChange={this.addSearch.bind(this)} />
-              <NavLink activeClassName="active" to={this.state.searchCQ} className="btn btn-outline-info btn-sm" >Search</NavLink>
+              <NavLink activeClassName="active" to={this.state.searchCQ} className="btn btn-outline-info btn-sm" type="submit" >Search</NavLink>
              
               {/*  <Button variant="outline-info" component={Link} to="/insert">jaja</Button> */}
             </Form>
@@ -73,7 +73,6 @@ class App extends React.Component {
             </Route>
             <Route path="/results" component={Results}></Route>
             <Route path="/addResults" component={AddResult}></Route>
-            <Route path="/jaj" component={jaj}></Route>
             <Route path="/editCandidate/:regNo" component={UpdateCandidate}></Route>
             <Route path="/">
               <Home />
@@ -91,7 +90,7 @@ class App extends React.Component {
 function Home() {
   return (<div className="container m-5">
     <Tabs defaultActiveKey="home" id="uncontrolled-tab-example" className="pt-5">
-      <Tab eventKey="home" title="All">
+      <Tab eventKey="home" title="All" onSelect={Home1}>
         <Home1 />
       </Tab>
       <Tab eventKey="add" title="Add Candidate">
@@ -104,7 +103,9 @@ class Home1 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      candidates: []
+      candidates: [],
+      show:false,
+      dltId:''
     };
   };
   componentDidMount() {
@@ -120,13 +121,27 @@ class Home1 extends React.Component {
 
   
   deleteUser(e){
-    let k = e.target.getAttribute("data-remove");
+    let k = this.state.dltId;
     Axios.delete(`http://localhost:3001/api/userDelete?id=${k}`).then((res)=>{
       console.log(res)
     }).catch((err)=>{
       console.log(err)
     });
     window.location.reload();
+  }
+  handleShow(e){
+    this.setState({
+      show:!this.state.show,
+      dltId:e.target.getAttribute('data-remove')
+    })
+  }
+  handleClose(){
+    this.setState({
+      show:!this.state.show
+    })
+  }
+  alerty(e){
+    alert(this.state.dltId);
   }
   render() {
     return (<div>
@@ -157,12 +172,31 @@ class Home1 extends React.Component {
                 <td><img className="img-fluid"
                   src={`${process.env.PUBLIC_URL}/profilepics/${el[5]}`}
                   alt="logo" /></td>
-                <td><button type="submit" className="btn btn-outline-danger btn-sm" data-remove={el[0]} type="submit"
-                  onClick={this.deleteUser.bind(this)} data-toggle="tooltip" data-placement="right" title="Delete User"><FontAwesomeIcon icon={faTrash} style={{ color: 'red' }} size="md"/></button>
+                <td><button type="submit" className="btn btn-outline-danger btn-sm" data-remove={el[0]}
+                 onClick={this.handleShow.bind(this)} data-toggle="tooltip" data-placement="right" title="Delete User"><FontAwesomeIcon icon={faTrash} style={{ color: 'red' }} size="sm"/></button>
   
                     <NavLink activeClassName="active" to={`/editCandidate/${el[0]}`} className="btn btn-outline-success btn-sm"
-                     data-toggle="tooltip" data-placement="right" title="Edit User"><FontAwesomeIcon icon={faEdit} style={{ color: 'green' }} size="md"/></NavLink>
+                     data-toggle="tooltip" data-placement="right" title="Edit User"><FontAwesomeIcon icon={faEdit} style={{ color: 'green' }} size="sm"/></NavLink>
+                    
+
+      <Modal show={this.state.show} onHide={this.handleClose.bind(this)} animation={true} centered 
+      aria-labelledby="contained-modal-title-vcenter" autoFocus={true}>
+        <Modal.Header closeButton>
+          <Modal.Title>Resistration Number {this.state.dltId}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this candidate ?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.handleClose.bind(this)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={this.deleteUser.bind(this)}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
                     </td>
+
               </tr>)
             })}
 
