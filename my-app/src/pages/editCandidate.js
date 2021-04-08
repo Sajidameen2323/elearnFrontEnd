@@ -169,9 +169,9 @@ class UpdateCandidate extends React.Component {
       return (
         <div>
           <div className="container mt-5">
-          <h5 className="pt-3">Edit Sector for candidate {this.state.regNo} </h5>
+          <h5 className="pt-5">Edit Sector for candidate {this.state.regNo} </h5>
 
-            <Form className="ml-5 mt-5">
+            <Form className="ml-3 mt-5">
           
 
               <Form.Group controlId="formBasicFirstName" as={Col} md="4">

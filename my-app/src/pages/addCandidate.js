@@ -112,6 +112,7 @@ class Insert extends React.Component {
           email: this.state.email, industry: this.state.industry, profilepic: Date.now().toString().slice(0,9)+'-'+this.state.selectedFile.name
         }).then(() => {
           alert('success');
+
         });
         Axios.post("http://localhost:3001/api/upload", data, {
         }).then((res) => {
@@ -122,6 +123,7 @@ class Insert extends React.Component {
           errorText:'',
           emailError:''
         });
+        window.location.reload();
       } else {
         this.setState({
           errorText:'Fill All Fields'
@@ -133,7 +135,7 @@ class Insert extends React.Component {
       return (
         <div>
           <div className="container ">
-            <Form className="ml-5 mt-5">
+            <Form className="ml-3 mt-5">
 
             <Form.Group controlId="formBasicFirstName" as={Col} md="4">
                 <Form.Label className="font-weight-bold">Registration Number</Form.Label>
@@ -179,7 +181,7 @@ class Insert extends React.Component {
                 <Form.Text className="text-danger">
                   {this.state.errorText}
       </Form.Text>
-        <img className="img-fluid mt-2"
+        <img className="img img-fluid mt-2 img-responsive"
                   src={this.state.imgSrc}
                   alt="profilepic" />
               </Form.Group>

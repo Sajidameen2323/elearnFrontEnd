@@ -12,7 +12,7 @@ import Axios from 'axios';
 
 
 function Results() {
-  return (<div className="container m-5">
+  return (<div className="container mt-5">
 
     <Tabs defaultActiveKey="home" id="uncontrolled-tab-example" className="pt-5">
       <Tab eventKey="home" title="All">
@@ -89,7 +89,7 @@ class Results1 extends React.Component {
               <Form.Control
                 className="mb-2"
                 id="inlineFormInput"
-                placeholder="Jane Doe"
+                placeholder="Date"
                 type="Date"
                 onChange={this.setFilterDate.bind(this)}
               />
@@ -126,8 +126,8 @@ class Results1 extends React.Component {
           </thead>
           <tbody>
 
-            {this.state.results.map((el) => {
-              return (<tr>
+            {this.state.results.map((el,i) => {
+              return (<tr key={i}>
                 <td>{el[8]}</td>
                 <td>{el[0]} {el[1]}</td>
                 <td>{el[2]}</td>

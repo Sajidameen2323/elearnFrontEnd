@@ -89,7 +89,7 @@ class AddResult extends React.Component {
   render() {
     return (
       <div>
-        <Form className="ml-5 mt-5">
+        <Form className="ml-3 mt-5">
           <Form.Group controlId="formBasicCandidateId" as={Col} md="4">
           <Form.Label className="font-weight-bold">Registration Number</Form.Label>
             <Dropdown >
@@ -99,7 +99,7 @@ class AddResult extends React.Component {
 
               <Dropdown.Menu>
                 {this.state.v.map((el)=>{
-                  return <Dropdown.Item data-val={el} onClick={this.addregNo.bind(this)}>{el}</Dropdown.Item>
+                  return <Dropdown.Item data-val={el} key={el} onClick={this.addregNo.bind(this)}>{el}</Dropdown.Item>
                 })}
               </Dropdown.Menu>
             </Dropdown>
@@ -117,7 +117,7 @@ class AddResult extends React.Component {
 
               <Dropdown.Menu>
                 {[1,2,3,4,5].map((el)=>{
-                  return <Dropdown.Item data-val={el} onClick={this.addLevel.bind(this)}>{el}</Dropdown.Item>
+                  return <Dropdown.Item data-val={el} key={el} onClick={this.addLevel.bind(this)}>{el}</Dropdown.Item>
                 })}
               </Dropdown.Menu>
             </Dropdown>
