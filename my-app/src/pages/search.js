@@ -116,13 +116,13 @@ class SearchCandidate extends React.Component {
               <tbody>
   
                 {this.state.srchr.map((el) => {
-                  return (<tr>
+                  return (<tr key={el[0]}>
                     <td>{el[0]}</td>
                     <td>{el[1]}</td>
                     <td>{el[2]}</td>
                     <td>{el[3]}</td>
                     <td>{el[4]}</td>
-                    <td><img className="img img-responsive img-fluid"
+                    <td><img 
                       src={`${process.env.PUBLIC_URL}/profilepics/${el[5]}`}
                       alt="logo" /></td>
                       <td><button type="submit" className="btn btn-outline-danger btn-sm" data-remove={el[0]}
@@ -134,7 +134,7 @@ class SearchCandidate extends React.Component {
 
 
       <Modal show={this.state.show} onHide={this.handleClose.bind(this)} animation={true} centered 
-      aria-labelledby="contained-modal-title-vcenter" autoFocus={true}>
+      aria-labelledby="contained-modal-title-vcenter">
         <Modal.Header closeButton>
           <Modal.Title>Resistration Number {this.state.dltId}</Modal.Title>
         </Modal.Header>
@@ -181,12 +181,6 @@ class SearchCandidate extends React.Component {
     };
 
 
-    shouldComponentUpdate(){
-  if(window.location.href !== this.state.currentUrl){
-    return true
-  }
-}
-
     componentDidMount() {
       let str = window.location.href.replace('3000/search', '3001/api/search/result');
       Axios.get(str).then((res) => {
@@ -201,7 +195,9 @@ class SearchCandidate extends React.Component {
     };
 
     componentDidUpdate(){
-            let str = window.location.href.replace('3000/search', '3001/api/search/result');
+
+          if(window.location.href !== this.state.currentUrl){
+                        let str = window.location.href.replace('3000/search', '3001/api/search/result');
       Axios.get(str).then((res) => {
         let temp = res.data.map((el) => {
           return [el.firstname, el.lastname, el.knowledge_area, el.level, el.score, el.assessor, el.overall, el.completed.split('T')[0],el.cand_reg_no]
@@ -211,6 +207,9 @@ class SearchCandidate extends React.Component {
           currentUrl:window.location.href
         })
       })
+  }
+
+
     }
 
 
@@ -232,7 +231,7 @@ class SearchCandidate extends React.Component {
           <div className="table-responsive mt-3" data-spy="scroll">
             <table className="table thead-dark table-striped table-hover table-bordered m-3">
               <thead className="thead-dark">
-                <tr>
+                <tr >
                  <th scope="col" >Reg No </th>
                 <th scope="col" >Full Name</th>
                 <th scope="col">Knowledge Area</th>
@@ -245,8 +244,8 @@ class SearchCandidate extends React.Component {
               </thead>
               <tbody>
   
-                {this.state.srchr.map((el) => {
-                  return (<tr>
+                {this.state.srchr.map((el,ind) => {
+                  return (<tr key={ind}>
                   <td>{el[8]}</td>
                   <td>{el[0]} {el[1]}</td>
                   <td>{el[2]}</td>

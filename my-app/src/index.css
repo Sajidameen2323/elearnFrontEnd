@@ -31,9 +31,13 @@ input[type=radio]{
 @media only screen and (max-width: 600px) {
 .nav-link{
   text-align: center;
-  font-size: 14px;
   vertical-align: middle;
 }
+img{
+  width: 100px;
+  height: auto;
+}
+
 
 table{
   padding: 0px;
@@ -43,4 +47,11 @@ table{
 .dropdown-menu {
   height: 150px;
   overflow-y: scroll;
+}
+
+@media (min-width: 600px){
+  img{
+  width: 50%;
+  height:auto;
+}
 }

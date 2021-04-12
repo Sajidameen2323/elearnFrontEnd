@@ -49,28 +49,30 @@ class UpdateCandidate extends React.Component {
 
     addFisrtName(e) {
       let reg = /^[a-z]+$/i;
-      if (reg.test(e.target.value)){
+      if (reg.test(e.target.value) && e.target.value !== ''){
         this.setState({
         firstname: e.target.value,
         firstnameError:''
       })
       } else{
         this.setState({
-          firstnameError:'Name Cannot Contain Numbers Or Be Empty'
+          firstnameError:'Name Cannot Contain Numbers Or Be Empty',
+          firstname:''
         })
       }
 
     }
        addLastName(e) {
    let reg = /^[a-z]+$/i;
-      if (reg.test(e.target.value)){
+      if (reg.test(e.target.value) && e.target.value !== ''){
         this.setState({
         lastname: e.target.value,
         lastnameError:''
       })
       } else{
         this.setState({
-          lastnameError:'Name Cannot Contain Numbers Or Be Empty'
+          lastnameError:'Name Cannot Contain Numbers Or Be Empty',
+          lastname:''
         })
       }
     }
@@ -266,7 +268,7 @@ class UpdateCandidate extends React.Component {
               <Form.Group as={Col} md="4">
               
                 <Form.File id="exampleFormControlFile1" label={`Profile pic : ${this.state.profilepicName}`} className="font-weight-bold" onChange={this.addFile.bind(this)} />
-                <img className="img-fluid mt-2"
+                <img className="mt-2"
                   src={this.state.imgSrc}
                   alt="logo" />
                 <Form.Text className="text-danger">

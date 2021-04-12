@@ -21,7 +21,8 @@ class AddResult extends React.Component {
       score: null,
       assessor: null,
       overall: null,
-      completed: null
+      completed: null,
+      errorText:''
     }
   }
   addOverall(e) {
@@ -74,6 +75,12 @@ class AddResult extends React.Component {
       }).then((res) => {
 
       })
+      alert('successfully added');
+      window.location.reload();
+    } else {
+      this.setState({
+        errorText:'Fill All Fields And Check for Errors'
+      })
     }
   }
   componentDidMount() {
@@ -89,7 +96,7 @@ class AddResult extends React.Component {
   render() {
     return (
       <div>
-        <Form className="ml-3 mt-5">
+        <Form className=" mt-5">
           <Form.Group controlId="formBasicCandidateId" as={Col} md="4">
           <Form.Label className="font-weight-bold">Registration Number</Form.Label>
             <Dropdown >
@@ -143,11 +150,15 @@ class AddResult extends React.Component {
           <Form.Group controlId="formBasicCompleted" as={Col} md="4">
             <Form.Label className="font-weight-bold">Completed</Form.Label>
             <Form.Control type="date" placeholder="Submitted Date" onChange={this.addCompleted.bind(this)} />
+             <Form.Text className="text-danger">
+                  {this.state.errorText}
+      </Form.Text>
           </Form.Group>
 
-          <Button variant="outline-dark" type="submit" className="ml-3" onClick={this.submitData.bind(this)}>
+          <Button variant="outline-dark" className="ml-3" onClick={this.submitData.bind(this)}>
             Submit
     </Button>
+    <input className="btn btn-sm btn-outline-dark ml-3 p-1" type="reset"/>
         </Form>
         
       </div>

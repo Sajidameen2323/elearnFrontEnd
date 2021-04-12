@@ -138,7 +138,7 @@ class Home1 extends React.Component {
   render() {
     return (<div>
     
-    <h5 className="pt-3 pl-5">Candidates Count: {this.state.candidates.length}</h5>
+    <h5 className="pt-3 ">Candidates Count: {this.state.candidates.length}</h5>
       <div className="table-responsive mt-3" data-spy="scroll">
         <table className="table thead-dark table-hover table-striped table-bordered m-3 ">
           <thead className="thead-dark">
@@ -161,7 +161,7 @@ class Home1 extends React.Component {
                 <td>{el[2]}</td>
                 <td>{el[3]}</td>
                 <td>{el[4]}</td>
-                <td><img className="img img-fluid img-responsive"
+                <td><img 
                   src={`${process.env.PUBLIC_URL}/profilepics/${el[5]}`}
                   alt="logo" /></td>
                 <td><button type="submit" className="btn btn-outline-danger btn-sm" data-remove={el[0]}
@@ -174,7 +174,7 @@ class Home1 extends React.Component {
                     
 
       <Modal show={this.state.show} onHide={this.handleClose.bind(this)} animation={true} centered 
-      aria-labelledby="contained-modal-title-vcenter" autoFocus={true}>
+      aria-labelledby="contained-modal-title-vcenter"  >
         <Modal.Header closeButton>
           <Modal.Title>Resistration Number {this.state.dltId}</Modal.Title>
         </Modal.Header>

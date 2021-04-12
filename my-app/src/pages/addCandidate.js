@@ -21,45 +21,68 @@ class Insert extends React.Component {
         emailError:'',
         firstnameError:'',
         lastnameError:'',
-        imgSrc:null
+        regError:'',
+        imgSrc:null,
+        inUseRegNo:null
   
       }
     };
-    addRegNumber(e){
+
+ componentDidMount() {
+    Axios.get('http://localhost:3001/api/regNo').then((res) => {
+      let arr = res.data;
+      let temp = arr.map((el) => { return el.regNo });
       this.setState({
-        regNo:e.target.value
+        inUseRegNo: temp
       })
+    })
+  }
+
+
+    addRegNumber(e){
+if(!this.state.inUseRegNo.includes(parseInt(e.target.value))){
+    this.setState({
+        regNo:e.target.value,
+        regError:''
+      })
+}else{
+  this.setState({
+    regError:'Registration Number Already In Use'
+  })
+}
+
+    
     }
     addFisrtName(e) {
       let reg = /^[a-z]+$/i;
-      if (reg.test(e.target.value)){
+      if (reg.test(e.target.value) || e.target.value===''){
         this.setState({
         firstname: e.target.value,
         firstnameError:''
       })
       } else{
         this.setState({
-          firstnameError:'Name Cannot Contain Numbers Or Be Empty'
+          firstnameError:'Name Cannot Contain Numbers'
         })
       }
 
     }
     addLastName(e) {
    let reg = /^[a-z]+$/i;
-      if (reg.test(e.target.value)){
+      if (reg.test(e.target.value) || e.target.value===''){
         this.setState({
         lastname: e.target.value,
         lastnameError:''
       })
       } else{
         this.setState({
-          lastnameError:'Name Cannot Contain Numbers Or Be Empty'
+          lastnameError:'Name Cannot Contain Numbers'
         })
       }
     }
     addEmail(e) {
       let reg = /^[a-z][\w]+[.]{0,1}[\w]+[@][\w]+[.][\w]+/i;
-      if(reg.test(e.target.value)){
+      if(reg.test(e.target.value) || e.target.value===''){
               this.setState({
         email: e.target.value,
         emailError:''
@@ -101,10 +124,11 @@ class Insert extends React.Component {
       const regName = /^[a-zA-Z\s]+$/;
       let chkFirstName = regName.test(this.state.firstname);
       let chkLastName = regName.test(this.state.lastname);
+
       if (this.state.firstname !== '' && this.state.lastname !== ''
         && this.state.email !== '' && this.state.industry && this.state.selectedFile !== null && chkEmail
          && chkLastName && chkFirstName
-        && this.state.regNo !== '') {
+        && this.state.regNo !== '' && this.state.regError==='') {
         data.append('file', this.state.selectedFile);
         console.log(data);
         Axios.post('http://localhost:3001/api/insert', {registrationNo:this.state.regNo,
@@ -126,21 +150,24 @@ class Insert extends React.Component {
         window.location.reload();
       } else {
         this.setState({
-          errorText:'Fill All Fields'
+          errorText:'Fill All Fields And Check For Errors'
         })
       }
     }
   
     render() {
       return (
-        <div>
-          <div className="container ">
-            <Form className="ml-3 mt-5">
+        <div className="clearfix">
+          <div className="container clearfix">
+            <Form className=" mt-5">
 
             <Form.Group controlId="formBasicFirstName" as={Col} md="4">
                 <Form.Label className="font-weight-bold">Registration Number</Form.Label>
                 <Form.Control type="number" placeholder="Enter Registration Number" onChange={this.addRegNumber.bind(this)} 
                 />
+                      <Form.Text className="text-danger">
+                  {this.state.regError}
+      </Form.Text>
               </Form.Group>
               <Form.Group controlId="formBasicFirstName" as={Col} md="4">
                 <Form.Label className="font-weight-bold">First Name</Form.Label>
@@ -177,20 +204,21 @@ class Insert extends React.Component {
               </Form.Group>
   
               <Form.Group as={Col} md="4">
-                <Form.File id="exampleFormControlFile1" label="Profile pic" className="font-weight-bold" onChange={this.addFile.bind(this)} />
-                <Form.Text className="text-danger">
-                  {this.state.errorText}
-      </Form.Text>
-        <img className="img img-fluid mt-2 img-responsive"
+                <Form.File id="exampleFormControlFile1" label="Profile pic" accept="image/*" className="font-weight-bold" onChange={this.addFile.bind(this)} />
+                
+        <img 
                   src={this.state.imgSrc}
                   alt="profilepic" />
+                   <Form.Text className="text-danger">
+                  {this.state.errorText}
+      </Form.Text>
               </Form.Group>
                 
-  
-              <Button variant="outline-dark"  className="ml-3" onClick={this.submitData.bind(this)}>
+ 
+              <Button variant="outline-dark" id="kaka"  className="ml-3 pt-1" onClick={this.submitData.bind(this)} >
                 Submit
     </Button>
-
+   <input className="btn btn-sm btn-outline-dark ml-3 p-1" type="reset"/>
             </Form>
           </div>
         </div>
