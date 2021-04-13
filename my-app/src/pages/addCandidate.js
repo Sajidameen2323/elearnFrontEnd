@@ -23,7 +23,7 @@ class Insert extends React.Component {
         lastnameError:'',
         regError:'',
         imgSrc:null,
-        inUseRegNo:null
+        inUseRegNo:[]
   
       }
     };
